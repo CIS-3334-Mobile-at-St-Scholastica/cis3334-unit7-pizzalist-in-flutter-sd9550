@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onChanged: (double newValue) {
                             setState(() {
                               sliderValue = newValue.toInt();
-                              print(sliderValue);
+                              //print(sliderValue);
                             });
                           }),
                       ElevatedButton(
@@ -78,18 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     ]
                 );
-              })
-
-
+              }
+            )
+          );
+        }
       );
-    });
   }
 
   void addToOrder(String toppings, int index) {
     Pizza pizza = new Pizza(toppings, index);
     setState(() {
       pizzasInOrder.add(pizza);
-      print(pizzasInOrder);
+      //print(pizzasInOrder);
     });
   }
 
