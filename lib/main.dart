@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unit7_pizzalist/pizza.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,9 +30,67 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  List<Pizza> pizzasInOrder = [];
+
+  @override
+  void initState() {
+    super.initState();
+    pizzasInOrder.add(Pizza("Pepperoni", 2));
+    pizzasInOrder.add(Pizza("Canadian Bacon and Pineapple", 2));
+
+  }
+
   void _addPizza() {
     // TODO: display add pizza Dialog window
-    print("addPizza called");
+    final TextEditingController toppingsController = TextEditingController();
+    int sliderValue = 0;
+    // print(pizzasInOrder.toString());
+    showDialog<void>(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+          title: const Text("Add a Pizza"),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: toppingsController,
+                        decoration: const InputDecoration(hintText: "Toppings"),
+                      ),
+                      Slider(
+                          label: Pizza.PIZZA_SIZES[sliderValue],
+                          value: sliderValue.toDouble(),
+                          min: 0,
+                          max: (Pizza.PIZZA_PRICES.length - 1).toDouble(),
+                          divisions: (Pizza.PIZZA_PRICES.length - 1).toInt(),
+                          onChanged: (double newValue) {
+                            setState(() {
+                              sliderValue = newValue.toInt();
+                              print(sliderValue);
+                            });
+                          }),
+                      ElevatedButton(
+                          onPressed: () => {
+                            addToOrder(toppingsController.text, sliderValue),
+                            Navigator.pop(context)
+                          },
+                          child: Text("Add to Order")
+                      )
+                    ]
+                );
+              })
+
+
+      );
+    });
+  }
+
+  void addToOrder(String toppings, int index) {
+    Pizza pizza = new Pizza(toppings, index);
+    setState(() {
+      pizzasInOrder.add(pizza);
+      print(pizzasInOrder);
+    });
   }
 
   @override
@@ -40,12 +99,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Text("Display List of Pizza objects here"),
+      body: ListView.builder(
+        itemCount: pizzasInOrder.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(pizzasInOrder[index].toString()),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addPizza,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
+
+
+
