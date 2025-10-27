@@ -35,9 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // Add some pizzas to the order
     pizzasInOrder.add(Pizza("Pepperoni", 2));
     pizzasInOrder.add(Pizza("Canadian Bacon and Pineapple", 2));
-
   }
 
   void _addPizza() {
@@ -57,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         controller: toppingsController,
                         decoration: const InputDecoration(hintText: "Toppings"),
                       ),
+                      // Slider section
                       Slider(
                           label: Pizza.PIZZA_SIZES[sliderValue],
                           value: sliderValue.toDouble(),
@@ -69,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               //print(sliderValue);
                             });
                           }),
+                      // Button under the slider
                       ElevatedButton(
                           onPressed: () => {
                             addToOrder(toppingsController.text, sliderValue),
@@ -86,7 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void addToOrder(String toppings, int index) {
-    Pizza pizza = new Pizza(toppings, index);
+    if (toppings.isEmpty) {
+      toppings = "NONE";
+    }
+    Pizza pizza = Pizza(toppings, index);
     setState(() {
       pizzasInOrder.add(pizza);
       //print(pizzasInOrder);
@@ -102,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
         itemCount: pizzasInOrder.length,
         itemBuilder: (context, index) {
+          // Return all the pizzas in the order with price
           return ListTile(
             title: Text(pizzasInOrder[index].toString()),
           );
